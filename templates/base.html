@@ -1,0 +1,16 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{heading}}</title>
+        {% include "snippets/styles.html" %}
+    </head>
+    <body>
+        {% include "snippets/navbar.html" %}
+
+        {% block content %}
+        {% endblock content %}
+
+        {% include "snippets/scripts.html" %}
+    </body>
+</html>

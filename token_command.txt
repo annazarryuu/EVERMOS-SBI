@@ -1,0 +1,11 @@
+http post http://127.0.0.1:8000/api-token-auth/ username=testAuth password=testAuth
+
+fab63787bed665fd9ede168fecb587fb55fe71cb
+
+http http://127.0.0.1:8000/hello/ "Authorization: Token fab63787bed665fd9ede168fecb587fb55fe71cb"
+
+
+
+febb0db09602e223f05fedb2d13547d7bd41906b
+http http://127.0.0.1:8000/dummy-with-token/ "Authorization: Token febb0db09602e223f05fedb2d13547d7bd41906b"
+

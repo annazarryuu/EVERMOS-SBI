@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <div class="container">
+        <div>
+            <h1 class="text-center" style="margin-top: 100px;">{{hellowrod}}</h1>
+        </div>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="document" accept="image/png, image/jpeg" class="form-control" style="margin-top: 100px;">
+            <button type="submit" class="btn btn-primary" style="margin-top: 10px;"> Find Product </button>
+        </form>
+
+        {% if onsearch %}
+        <div class="text-center">
+            <img src="{{onsearch}}" class="rounded" alt="on Search Image" style="height:300px;">
+            <p>The image that being searched</p>
+        </div>
+        <div class="row row-cols-1 row-cols-md-4">
+            {% for img in images %}
+                    <div class="col mb-4">
+                    <div class="card h-100">
+                        <img src="{% static img %}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{img}}</h5>
+                                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            </div>
+                        </div>
+                    </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+{% endblock content %}
