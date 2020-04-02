@@ -25,7 +25,7 @@ SECRET_KEY = '3$3_wl$-n7lgu#rq*b0is8noxuzv=l8055mi88q=#7#b#y1=gk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['blutterfly.pythonanywhere.com']
+ALLOWED_HOSTS = ['blutterfly.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition

@@ -26,13 +26,14 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index),
-    path('dummy/', views.imageSearchs),
+    path('', views.home.as_view()),
+    path('image-search/', views.imageSearch.as_view()),
+    path('image-search/<str:path>/', views.imageSearchResult.as_view()),
     path('api-auth/', include('rest_framework.urls')),
     path('api-token-auth/', obtain_auth_token),
     path('users/', views.UserList.as_view()),
     path('users/<int:pk>/', views.UserDetail.as_view()),
-    path('dummy-with-token/', views.imageSearch.as_view()),
+    path('dummy-with-token/', views.imageSearchAPI.as_view()),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

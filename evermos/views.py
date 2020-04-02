@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
 from evermos import DummyML
@@ -17,37 +17,55 @@ from django.contrib.auth.models import User
 from evermos.serializers import UserSerializer
 from rest_framework import generics
 from rest_framework.views import APIView
+from django.views.generic import TemplateView
 
-def index(request) :
-    context = {
-        'heading' : 'Image Search',
-        'subheading' : 'Search Products by Your Image',
-        'hellowrod' : 'Hello, World!'
-    }
+class home(TemplateView) :
 
-    if(request.method == 'POST') :
+    def get(self, request):
+        return redirect('/image-search')
+
+class imageSearch(TemplateView) :
+
+    def get(self, request):
+        context = {
+            'heading' : 'Image Search',
+            'subheading' : 'Search Products by Your Image',
+            'hellowrod' : 'Hello, World!'
+        }
+        return render(request, 'index.html', context)
+
+    def post(self, request) :
         try :
             uploaded_image = request.FILES['document']
             fs = FileSystemStorage()
             name = fs.save(uploaded_image.name, uploaded_image)
-            url = fs.url(name)
-            images = DummyML.getModel(url)
-            context['images'] = images['images']
-            context['onsearch'] = url
-        except MultiValueDictKeyError :
-            pass
+            path = fs.url(name).split('/')[2]
+            return redirect('/image-search/' + path)
+        except :
+            return redirect('/image-search')
 
-    return render(request, 'index.html', context)
+class imageSearchResult(TemplateView) :
 
-def imageSearchs(request) :
+    def get(self, request, path):
+        context = {
+            'heading' : 'Image Search',
+            'subheading' : 'Search Products by Your Image',
+            'hellowrod' : 'Hello, World!'
+        }
+        images = DummyML.getModel(path)
+        context['images'] = images['images']
+        context['onsearch'] = '/media/' + path
+        return render(request, 'index.html', context)
 
-    return JsonResponse(DummyML.getModel(None), status=status.HTTP_200_OK)
-
-    # response = Response(DummyML.getModel(None), status=status.HTTP_200_OK)
-    # response.accepted_renderer = JSONRenderer()
-    # response.accepted_media_type = "application/json"
-    # response.renderer_context = {}
-    # return response
+    def post(self, request, path) :
+        try :
+            uploaded_image = request.FILES['document']
+            fs = FileSystemStorage()
+            name = fs.save(uploaded_image.name, uploaded_image)
+            path = fs.url(name).split('/')[2]
+            return redirect('/image-search/' + path)
+        except :
+            return redirect('/image-search')
 
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
@@ -57,10 +75,9 @@ class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class imageSearch(APIView) :
+class imageSearchAPI(APIView) :
     permission_classes = (IsAuthenticated,)
-    def get(self, request):
-        return JsonResponse(DummyML.getModel(None), status=status.HTTP_200_OK)
+
     def post(self, request):
         try :
             uploaded_image = request.FILES['document']
