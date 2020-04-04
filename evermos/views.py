@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import permissions
+import os
 
 #Request
 import requests
@@ -23,6 +24,8 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from django.views.generic import TemplateView
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 class requestToAPI() :
     API_URL = 'http://127.0.0.1:8000/dummy-with-token/'
     API_HEADER = {"Authorization":"Token febb0db09602e223f05fedb2d13547d7bd41906b"}
@@ -36,7 +39,8 @@ class requestToAPI() :
     def getContext(self, path = None) :
         additional = dict()
         if path != None :
-            files = {'document': open('media/' + path,'rb')}
+            files = {'document': open(os.path.join(BASE_DIR, 'media/' + path),'rb')}
+            print('dir : ', os.path.join(BASE_DIR, 'media'))
             r = requests.post(self.API_URL, files=files, headers=self.API_HEADER)
             additional['images'] = r.json()['images']
             additional['onsearch'] = '/media/' + path
