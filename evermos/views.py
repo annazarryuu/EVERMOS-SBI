@@ -8,6 +8,10 @@ from rest_framework.renderers import JSONRenderer
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import permissions
 
+#Request
+import requests
+import json
+
 #Authentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
@@ -19,6 +23,35 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from django.views.generic import TemplateView
 
+class requestToAPI() :
+    API_URL = 'http://127.0.0.1:8000/dummy-with-token/'
+    API_HEADER = {"Authorization":"Token febb0db09602e223f05fedb2d13547d7bd41906b"}
+
+    context = {
+        'heading' : 'Image Search',
+        'subheading' : 'Search Products by Your Image',
+        'hellowrod' : 'Hello, World!'
+    }
+
+    def getContext(self, path = None) :
+        additional = dict()
+        if path != None :
+            files = {'document': open('media/' + path,'rb')}
+            r = requests.post(self.API_URL, files=files, headers=self.API_HEADER)
+            additional['images'] = r.json()['images']
+            additional['onsearch'] = '/media/' + path
+        return {**self.context, **additional}
+
+    def redirectToGet(self, request) :
+        try :
+            uploaded_image = request.FILES['document']
+            fs = FileSystemStorage()
+            name = fs.save(uploaded_image.name, uploaded_image)
+            path = fs.url(name).split('/')[2]
+            return redirect('/image-search/' + path)
+        except :
+            return redirect('/image-search')
+        
 class home(TemplateView) :
 
     def get(self, request):
@@ -27,45 +60,18 @@ class home(TemplateView) :
 class imageSearch(TemplateView) :
 
     def get(self, request):
-        context = {
-            'heading' : 'Image Search',
-            'subheading' : 'Search Products by Your Image',
-            'hellowrod' : 'Hello, World!'
-        }
-        return render(request, 'index.html', context)
+        return render(request, 'index.html', requestToAPI().getContext())
 
     def post(self, request) :
-        try :
-            uploaded_image = request.FILES['document']
-            fs = FileSystemStorage()
-            name = fs.save(uploaded_image.name, uploaded_image)
-            path = fs.url(name).split('/')[2]
-            return redirect('/image-search/' + path)
-        except :
-            return redirect('/image-search')
+        return requestToAPI().redirectToGet(request)
 
 class imageSearchResult(TemplateView) :
 
     def get(self, request, path):
-        context = {
-            'heading' : 'Image Search',
-            'subheading' : 'Search Products by Your Image',
-            'hellowrod' : 'Hello, World!'
-        }
-        images = DummyML.getModel(path)
-        context['images'] = images['images']
-        context['onsearch'] = '/media/' + path
-        return render(request, 'index.html', context)
+        return render(request, 'index.html', requestToAPI().getContext(path))
 
     def post(self, request, path) :
-        try :
-            uploaded_image = request.FILES['document']
-            fs = FileSystemStorage()
-            name = fs.save(uploaded_image.name, uploaded_image)
-            path = fs.url(name).split('/')[2]
-            return redirect('/image-search/' + path)
-        except :
-            return redirect('/image-search')
+        return requestToAPI().redirectToGet(request)
 
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
@@ -84,11 +90,11 @@ class imageSearchAPI(APIView) :
             file_extention = uploaded_image.name.split('.')
             file_extention = file_extention[len(file_extention) - 1]
             if(not(file_extention in ['jpg', 'png', 'jpeg'])) :
-                return JsonResponse({'status':'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse({'detail':'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
             fs = FileSystemStorage()
             name = fs.save(uploaded_image.name, uploaded_image)
             url = fs.url(name)
             images = DummyML.getModel(url)
             return JsonResponse(images, status=status.HTTP_200_OK)
         except MultiValueDictKeyError :
-            return JsonResponse({'status' : 'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'detail' : 'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
