@@ -38,12 +38,12 @@ class requestToAPI() :
 
     def getContext(self, path = None) :
         additional = dict()
-        # if path != None :
-        #     files = {'document': open(os.path.join(BASE_DIR, 'media/' + path),'rb')}
-        #     print('dir : ', os.path.join(BASE_DIR, 'media'))
-        #     r = requests.post(self.API_URL, files=files, headers=self.API_HEADER)
-        #     additional['images'] = r.json()['images']
-        #     additional['onsearch'] = '/media/' + path
+        if path != None :
+            files = {'document': open('http://blutterfly.pythonanywhere.com/media/' + path,'rb')}
+            print('dir : ', os.path.join(BASE_DIR, 'media'))
+            r = requests.post(self.API_URL, files=files, headers=self.API_HEADER)
+            additional['images'] = r.json()['images']
+            additional['onsearch'] = '/media/' + path
         return {**self.context, **additional}
 
     def redirectToGet(self, request) :
