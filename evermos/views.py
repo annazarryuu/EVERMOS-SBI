@@ -41,7 +41,7 @@ class requestToAPI() :
         if path != None :
             files = {'document': open(os.path.join(BASE_DIR, 'media/' + path),'rb')}
             print('dir : ', os.path.join(BASE_DIR, 'media'))
-            r = requests.post(self.API_URL, files=files, headers=self.API_HEADER)
+            # r = requests.post(self.API_URL, files=files, headers=self.API_HEADER)
             additional['images'] = ['img/products/1525.jpg']
             additional['onsearch'] = '/media/' + path
         return {**self.context, **additional}
