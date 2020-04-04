@@ -39,7 +39,7 @@ class requestToAPI() :
     def getContext(self, path = None) :
         additional = dict()
         if path != None :
-            files = {'document': open('http://blutterfly.pythonanywhere.com/media/' + path,'rb')}
+            files = {'document': open('/home/blutterfly/evermos/media/' + path,'rb')}
             print('dir : ', os.path.join(BASE_DIR, 'media'))
             r = requests.post(self.API_URL, files=files, headers=self.API_HEADER)
             additional['images'] = r.json()['images']
