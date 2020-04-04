@@ -91,9 +91,8 @@ class imageSearchAPI(APIView) :
     def post(self, request):
         try :
             uploaded_image = request.FILES['document']
-            file_extention = uploaded_image.name.split('.')
-            file_extention = file_extention[len(file_extention) - 1]
-            if(not(file_extention in ['jpg', 'png', 'jpeg'])) :
+            filename = uploaded_image.name
+            if not any(filename.lower().endswith(ext) for ext in ['jpeg', 'jpg']) :
                 return JsonResponse({'detail':'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
             fs = FileSystemStorage()
             name = fs.save(uploaded_image.name, uploaded_image)
