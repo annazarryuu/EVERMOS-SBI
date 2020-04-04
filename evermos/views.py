@@ -27,7 +27,7 @@ from django.views.generic import TemplateView
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class requestToAPI() :
-    API_URL = 'http://127.0.0.1:8000/dummy-with-token/'
+    API_URL = 'http://blutterfly.pythonanywhere.com/dummy-with-token/'
     API_HEADER = {"Authorization":"Token febb0db09602e223f05fedb2d13547d7bd41906b"}
 
     context = {
