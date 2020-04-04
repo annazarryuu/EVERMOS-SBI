@@ -41,8 +41,8 @@ class requestToAPI() :
         if path != None :
             files = {'document': open('/home/blutterfly/evermos/media/' + path,'rb')}
             print('dir : ', os.path.join(BASE_DIR, 'media'))
-            r = requests.post(self.API_URL, files=files, headers=self.API_HEADER)
-            additional['images'] = r.json()['images']
+            # r = requests.post(self.API_URL, files=files, headers=self.API_HEADER)
+            additional['images'] = ['img/products/1525.jpg']
             additional['onsearch'] = '/media/' + path
         return {**self.context, **additional}
 
