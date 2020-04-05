@@ -25,6 +25,7 @@ from rest_framework.views import APIView
 from django.views.generic import TemplateView
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ML_MODEL = DummyML.MachineLearning()
 
 class requestToAPI() :
     API_URL = 'http://blutterfly.pythonanywhere.com/dummy-with-token/'
@@ -42,8 +43,9 @@ class requestToAPI() :
             # files = {'document': open(os.path.join(BASE_DIR, 'media/' + path),'rb')}
             # r = requests.post(self.API_URL, files=files, headers=self.API_HEADER)
             # additional['images'] =  r.json()['images']
-            additional['images'] = DummyML.getModel('/media/' + path)['images']
+            additional['images'] = ML_MODEL.doit('/media/' + path)['images']
             additional['onsearch'] = '/media/' + path
+        print(BASE_DIR)
         return {**self.context, **additional}
 
     def redirectToGet(self, request) :
@@ -97,7 +99,7 @@ class imageSearchAPI(APIView) :
             fs = FileSystemStorage()
             name = fs.save(uploaded_image.name, uploaded_image)
             url = fs.url(name)
-            images = DummyML.getModel(url)
+            images = ML_MODEL.doit(url)
             return JsonResponse(images, status=status.HTTP_200_OK)
         except MultiValueDictKeyError :
             return JsonResponse({'detail' : 'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)

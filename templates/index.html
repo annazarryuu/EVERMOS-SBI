@@ -15,20 +15,26 @@
 
         {% if onsearch %}
         <div class="text-center">
-            <img src="{{onsearch}}" class="rounded" alt="on Search Image" style="height:300px;">
+            <img src="{{onsearch}}" class="rounded searched" alt="on Search Image" style="height:300px;">
             <p>The image that being searched</p>
+            <style>
+                .searched {
+                    border: 1px solid #ccc;
+                    border-bottom-width: 0;
+                }
+            </style>
         </div>
-        <div class="row row-cols-1 row-cols-md-4">
+        <div class="wf-container">
             {% for img in images %}
-                    <div class="col mb-4">
-                    <div class="card h-100">
-                        <img src="{% static img %}" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">{{img}}</h5>
-                                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            </div>
-                        </div>
+            <div class="wf-box">
+                <a href="{% static img %}">
+                    <img src="{% static img %}" alt={{img}}>
+                    <div class="content">
+                        <h3>Product Name</h3>
+                        <p>Content Here</p>
                     </div>
+                </a>
+            </div>
             {% endfor %}
         </div>
         {% endif %}
