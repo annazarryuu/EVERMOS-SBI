@@ -9,7 +9,7 @@
         </div>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <input type="file" name="document" accept="image/png, image/jpeg" class="form-control" style="margin-top: 100px;">
+            <input type="file" name="document" accept=".png, .jpeg, .jpg" class="form-control" style="margin-top: 100px;">
             <button type="submit" class="btn btn-primary" style="margin-top: 10px;"> Find Product </button>
         </form>
 
