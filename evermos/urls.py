@@ -14,7 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+# from django.urls import path, include
+from django.conf.urls import url # django 1.11
 from django.conf import settings
 from django.conf.urls.static import static
 import rest_framework
@@ -24,16 +25,29 @@ from evermos import views
 from django.conf.urls import include
 from rest_framework.authtoken.views import obtain_auth_token
 
+# urlpatterns = [
+#     path('admin/', admin.site.urls),
+#     path('', views.home.as_view()),
+#     path('image-search/', views.imageSearch.as_view()),
+#     path('image-search/<str:path>/', views.imageSearchResult.as_view()),
+#     path('api-auth/', include('rest_framework.urls')),
+#     path('api-token-auth/', obtain_auth_token),
+#     path('users/', views.UserList.as_view()),
+#     path('users/<int:pk>/', views.UserDetail.as_view()),
+#     path('dummy-with-token/', views.imageSearchAPI.as_view()),
+# ]
+
+# django 1.11
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.home.as_view()),
-    path('image-search/', views.imageSearch.as_view()),
-    path('image-search/<str:path>/', views.imageSearchResult.as_view()),
-    path('api-auth/', include('rest_framework.urls')),
-    path('api-token-auth/', obtain_auth_token),
-    path('users/', views.UserList.as_view()),
-    path('users/<int:pk>/', views.UserDetail.as_view()),
-    path('dummy-with-token/', views.imageSearchAPI.as_view()),
+    url(r'^admin/', admin.site.urls),
+    url(r'^', views.home.as_view()),
+    url(r'^image-search/', views.imageSearch.as_view()),
+    url(r'^image-search/<str:path>/', views.imageSearchResult.as_view()),
+    url(r'^api-auth/', include('rest_framework.urls')),
+    url(r'^api-token-auth/', obtain_auth_token),
+    url(r'^users/', views.UserList.as_view()),
+    url(r'^users/<int:pk>/', views.UserDetail.as_view()),
+    url(r'^dummy-with-token/', views.imageSearchAPI.as_view()),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
